@@ -7,16 +7,16 @@
 namespace velocity_commands_adapter {
 
   /**
-   * @brief Class that contains methods to convert one type of velocity commands to another
-   * For now it only contains a method to convert differential drive velocity commands to ackermann velocity commands
+   * @brief Class that contains methods to convert one type of twist commands to another
+   * For now it only contains a method to convert differential drive twist commands to ackermann twist commands
    */
   class VelocityCommandsAdapterLib {
   public:
     /**
-     * @brief Converts a differential drive velocity command to an ackermann velocity command
+     * @brief Converts a differential drive twist command to an ackermann twist command
      * 
-     * @param differential_drive_twist_stamped_msg The differential drive velocity command to be converted
-     * @return geometry_msgs::msg::Twist The ackermann velocity command
+     * @param differential_drive_twist_stamped_msg The differential drive twist command to be converted
+     * @return geometry_msgs::msg::Twist The ackermann twist command
      */
     [[nodiscard]] static geometry_msgs::msg::Twist differential_drive_to_ackermann(
         const geometry_msgs::msg::Twist& differential_drive_twist_stamped_msg,

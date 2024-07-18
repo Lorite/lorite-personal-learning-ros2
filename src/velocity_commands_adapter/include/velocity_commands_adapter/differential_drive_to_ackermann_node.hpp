@@ -6,8 +6,23 @@
 
 namespace velocity_commands_adapter {
 
+  /**
+   * @brief Node that contains methods to convert one type of twist commands to another
+   * Subscribers:
+   * - /cmd_vel_differential_drive_topic (geometry_msgs::msg::Twist): The differential drive twist command. It is converted and published as an ackermann twist command
+   * Publishers:
+   * - /cmd_vel_ackermann_topic (geometry_msgs::msg::Twist): The ackermann twist command. It is published after converting the differential drive twist command.
+   * Parameters:
+   * - wheel_base: The distance between the front and rear axles of the robot
+   * - diff_cmd_vel_topic: The topic name of the differential drive velocity subscriber
+   * - ackermann_cmd_vel_topic: The topic name of the ackermann velocity publisher
+   * Units are in SI units
+   */
   class VelocityCommandsAdapterNode : public rclcpp::Node {
   public:
+    /**
+     * @brief Construct a new twist commands Adapter Node object
+     */
     VelocityCommandsAdapterNode();
 
   private:

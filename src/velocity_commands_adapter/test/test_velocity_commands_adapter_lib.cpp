@@ -16,7 +16,7 @@ TEST_F(TestVelocityCommandAdapterLib, TestAngularVelocityToSteeringAngleWithPosi
   double angular_velocity = 2.0;
   double wheel_base = 0.5;
   double steering_angle = velocity_commands_adapter::VelocityCommandsAdapterLib::angular_velocity_to_steering_angle(linear_velocity, angular_velocity, wheel_base);
-  EXPECT_NEAR(steering_angle, 0.3805, 0.001);
+  EXPECT_NEAR(steering_angle, 0.1974, 0.0001);
 }
 
 TEST_F(TestVelocityCommandAdapterLib, TestAngularVelocityToSteeringAngleWithNegativeValues) {
@@ -24,7 +24,7 @@ TEST_F(TestVelocityCommandAdapterLib, TestAngularVelocityToSteeringAngleWithNega
   double angular_velocity = -2.0;
   double wheel_base = 0.5;
   double steering_angle = velocity_commands_adapter::VelocityCommandsAdapterLib::angular_velocity_to_steering_angle(linear_velocity, angular_velocity, wheel_base);
-  EXPECT_NEAR(steering_angle, -0.3805, 0.001);
+  EXPECT_NEAR(steering_angle, -0.1974, 0.0001);
 }
 
 TEST_F(TestVelocityCommandAdapterLib, TestAngularVelocityToSteeringAngleWithZeroValues) {
@@ -43,7 +43,7 @@ TEST_F(TestVelocityCommandAdapterLib, TestDifferentialDriveToAckermann) {
   geometry_msgs::msg::Twist ackermann_twist_stamped_msg = 
     velocity_commands_adapter::VelocityCommandsAdapterLib::differential_drive_to_ackermann(differential_drive_twist_stamped_msg, wheel_base);
   EXPECT_EQ(ackermann_twist_stamped_msg.linear.x, 5.0);
-  EXPECT_NEAR(ackermann_twist_stamped_msg.angular.z, 0.3805, 0.001);
+  EXPECT_NEAR(ackermann_twist_stamped_msg.angular.z, 0.1974, 0.0001);
 }
 
 int main(int argc, char** argv) {
