@@ -66,8 +66,8 @@ VSCode will build the dockerfile inside of `.devcontainer` for you.  If you open
 3. Install dependencies `Terminal->Run Task..->install dependencies`
 4. (optional) Adjust scripts to your liking.  These scripts are used both within tasks and CI.
    * `setup.sh` The setup commands for your code.  Default to import workspace and install dependencies.
-   * `build.sh` The build commands for your code.  Default to `--merge-install` and `--symlink-install`
-   * `test.sh` The test commands for your code.
+   * `build.sh` The build commands for your code.  Default to `--symlink-install`. You can also build in the command line using `colcon build --packages-select <package_name>`.
+   * `test.sh` The test commands for your code. You can also run test in the command line using `colcon build --packages-select <package_name>; colcon test-result --delete-yes; colcon test --packages-select <package_name>; colcon test-result --verbose`.
 5. Develop!
 6. Build the code `Terminal->Run Task..->build`. This will build all of the packages in the workspace.
 7. Source the code `Terminal->Run Task..->source` or source it manually `source install/setup.bash`
@@ -75,11 +75,18 @@ VSCode will build the dockerfile inside of `.devcontainer` for you.  If you open
 
 ## Example using the Hunter SE robot
 
-You need 3 terminals to run the simulation of the Hunter SE robot.
+You need 6 terminals, 3 to run the simulation of the Hunter SE robot, 1 for the new node (velocity_commands_adapter), 1 for sending differential drive commands, and 1 for checking the topics.
 
-1.  `source install/setup.bash; ros2 launch hunter_se_description display.launch.py`
-2.  `source install/setup.bash; source /usr/share/gazebo-11/setup.bash; ros2 launch hunter_se_gazebo hunter_se_empty_world.launch.py`
-3.  `source install/setup.bash; ros2 run rqt_robot_steering rqt_robot_steering`
+I would have like to have a launch file that would start all of these nodes, but I didn't have time to create it.
+
+1. `source install/setup.bash; ros2 launch hunter_se_description display.launch.py`
+2. `source install/setup.bash; source /usr/share/gazebo-11/setup.bash; ros2 launch hunter_se_gazebo hunter_se_empty_world.launch.py`
+3. `source install/setup.bash; ros2 run rqt_robot_steering rqt_robot_steering`
+4. `source install/setup.bash; ros2 launch velocity_commands_adapter differential_drive_to_ackermann_launch.py wheelbase:=0.5 cmd_vel_differential_drive_topic:=cmd_vel_differential_drive cmd_vel_ackermann_topic:=cmd_vel`
+5. `ros2 topic pub /cmd_vel_differential_drive geometry_msgs/msg/Twist '{linear: {x: 1.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 2.0}}'`
+6. `ros2 topic echo /cmd_vel`
+
+<video controls src="media/Example using the Hunter SE robot.mp4" title="Example using the Hunter SE robot"></video>
 
 ## FAQ
 
@@ -162,4 +169,12 @@ Try running gazebo server and gazebo client separately with verbose output.
 3. Launch the gazebo server: `ros2 launch gazebo_ros gzserver.launch.py verbose:=true`
 4. Launch the gazebo client: `ros2 launch gazebo_ros gzclient.launch.py verbose:=true`
 
-A common issue is having the port already in use. You can check by running `ps` on the command line and looking for the gazebo server process. If you see it, you can kill it with `kill <pid>`.
+A common issue is having the port already in use. You can check by running `ps` on the command line and looking for the gazebo server process. If you see it, you can kill it with `kill <pid>`
+
+# Thoughts on using colcon vs bazel
+
+- It was interesting trying colcon for the first time, but I found it much more tedious than bazel. The need of building before running a launch file is a bit annoying. I also found that the build times were much longer than with bazel. Defining the dependencies in the package.xml and CMakeLists.txt files was also a bit annoying. 
+
+# TODO
+
+- [ ] Check https://github.com/ErickKramer/ros2_with_vscode for ideas on how to improve the Dev Container.
