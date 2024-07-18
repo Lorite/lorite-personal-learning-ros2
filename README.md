@@ -1,10 +1,10 @@
 # VSCode ROS2 Workspace Template
 
-This template will get you set up using ROS2 with VSCode as your IDE.
+This repository was created from [athackst/vscode_ros2_workspace](https://github.com/athackst/vscode_ros2_workspace). HUGE thanks to Allison Thackston for creating this template. It includes a VS Code Dev Container for ROS2 development, allowing you to develop in a consistent environment across different machines. You also don't need to install ROS2 on your host machine, as everything is contained within the Docker container.
 
-See [how I develop with vscode and ros2](https://www.allisonthackston.com/articles/vscode_docker_ros2.html) for a more in-depth look on how to use this workspace.
+See [how Allison Thackston develops with vscode and ros2](https://www.allisonthackston.com/articles/vscode_docker_ros2.html) for a more in-depth look on how to use this workspace.
 
-## Features
+## Dev Container Features
 
 ### Style
 
@@ -15,24 +15,17 @@ ROS2-approved formatters are included in the IDE.
 
 ### Tasks
 
-There are many pre-defined tasks, see [`.vscode/tasks.json`](.vscode/tasks.json) for a complete listing.  Feel free to adjust them to suit your needs.  
+There are many pre-defined tasks, see [`.vscode/tasks.json`](.vscode/tasks.json) for a complete listing.
 
-Take a look at [how I develop using tasks](https://www.allisonthackston.com/articles/vscode_tasks.html) for an idea on how I use tasks in my development.
+Take a look at [how Allison develops using tasks](https://www.allisonthackston.com/articles/vscode_tasks.html) for an idea on how I use tasks in my development.
 
 ### Debugging
 
-This template sets up debugging for python files, gdb for cpp programs and ROS launch files.  See [`.vscode/launch.json`](.vscode/launch.json) for configuration details.
+This Dev Container sets up debugging for python files, gdb for cpp programs and ROS launch files.  See [`.vscode/launch.json`](.vscode/launch.json) for configuration details.
 
 ### Continuous Integration
 
-The template also comes with basic continuous integration set up. See [`.github/workflows/ros.yaml`](/.github/workflows/ros.yaml).
-
-To remove a linter just delete it's name from this line:
-
-```yaml
-      matrix:
-          linter: [cppcheck, cpplint, uncrustify, lint_cmake, xmllint, flake8, pep257]
-```
+The Dev Container also comes with basic continuous integration set up. See [`.github/workflows/ros.yaml`](/.github/workflows/ros.yaml).
 
 ## How to use this template
 
@@ -44,25 +37,9 @@ You should already have Docker and VSCode with the remote containers plugin inst
 * [vscode](https://code.visualstudio.com/)
 * [vscode remote containers plugin](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
 
-### Get the template
-
-Click on "use this template"
-
-![template_use](https://user-images.githubusercontent.com/6098197/91331899-43f23b80-e780-11ea-92c8-b4665ce126f1.png)
-
-### Create your repository
-
-On the next dialog, name the repository you would like to start and decide if you want all of the branches, or just the latest LTS: humble.
-
-![template_new](https://user-images.githubusercontent.com/6098197/91332035-713ee980-e780-11ea-81d3-13b170f568b0.png)
-
-Github will then create a new repository with the contents of this one in your account.  It grabs the latest changes as "initial commit".
-
-### Clone your repo
+### Clone the repo
 
 Now you can clone your repo as normal
-
-![template_download](https://user-images.githubusercontent.com/6098197/91332342-e4e0f680-e780-11ea-9525-49b0afa0e4bb.png)
 
 ### Open it in vscode
 
@@ -92,7 +69,17 @@ VSCode will build the dockerfile inside of `.devcontainer` for you.  If you open
    * `build.sh` The build commands for your code.  Default to `--merge-install` and `--symlink-install`
    * `test.sh` The test commands for your code.
 5. Develop!
+6. Build the code `Terminal->Run Task..->build`. This will build all of the packages in the workspace.
+7. Source the code `Terminal->Run Task..->source` or source it manually `source install/setup.bash`
+8. From the command line, run a launch file `ros2 launch <package> <launch_file>`. 
 
+## Example using the Hunter SE robot
+
+You need 3 terminals to run the simulation of the Hunter SE robot.
+
+1.  `source install/setup.bash; ros2 launch hunter_se_description display.launch.py`
+2.  `source install/setup.bash; source /usr/share/gazebo-11/setup.bash; ros2 launch hunter_se_gazebo hunter_se_empty_world.launch.py`
+3.  `source install/setup.bash; ros2 run rqt_robot_steering rqt_robot_steering`
 
 ## FAQ
 
@@ -166,3 +153,13 @@ python3 .devcontainer/repos_to_submodules.py
 ```
 
 or run the task titled `add submodules from .repos`
+
+### Problems with gazebo
+
+Try running gazebo server and gazebo client separately with verbose output.
+1. Source ROS: `source install/setup.bash `
+2. Source Gazebo: `source /usr/share/gazebo-11/setup.bash`. You need to source this file every time you open a new terminal.
+3. Launch the gazebo server: `ros2 launch gazebo_ros gzserver.launch.py verbose:=true`
+4. Launch the gazebo client: `ros2 launch gazebo_ros gzclient.launch.py verbose:=true`
+
+A common issue is having the port already in use. You can check by running `ps` on the command line and looking for the gazebo server process. If you see it, you can kill it with `kill <pid>`.

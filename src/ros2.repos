@@ -8,3 +8,7 @@ repositories:
     type: git
     url: https://github.com/ros2/examples.git
     version: humble
+  hunter_se:
+    type: git
+    url: https://github.com/agilexrobotics/ugv_sim.git
+    version: humble
