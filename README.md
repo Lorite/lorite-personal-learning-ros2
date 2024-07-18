@@ -78,6 +78,8 @@ VSCode will build the dockerfile inside of `.devcontainer` for you.  If you open
 You need 6 terminals, 3 to run the simulation of the Hunter SE robot, 1 for the new node (velocity_commands_adapter), 1 for sending differential drive commands, and 1 for checking the topics.
 
 I would have like to have a launch file that would start all of these nodes, but I didn't have time to create it.
+The launch file would then be used to initialize the nodes on boot up on the robot.
+The file is located in `velocity_commands_adapter/init/velocity_commands_adapter.service`. The file would be placed in `/etc/systemd/system/` and then run `sudo systemctl enable velocity_commands_adapter.service` to enable the service.
 
 1. `source install/setup.bash; ros2 launch hunter_se_description display.launch.py`
 2. `source install/setup.bash; source /usr/share/gazebo-11/setup.bash; ros2 launch hunter_se_gazebo hunter_se_empty_world.launch.py`
